@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 abstract class BaseActivity : AppCompatActivity(), BaseView {
 
     override val viewModel: BaseViewModel? = null
+    private var loadingAndErrorListener: LoadingAndErrorListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,27 +20,19 @@ abstract class BaseActivity : AppCompatActivity(), BaseView {
             "${this::class.simpleName} viewModel is null"
         )
         else {
-            viewModel!!.loadingEvent.observe(this, Observer {
-                if (isLoadingInActivity)
-                    onHandleShowLoading(it)
+            viewModel!!.loadingEvent.observe(this, {
+                loadingAndErrorListener?.onHandleShowLoading(it)
+
             })
-            viewModel!!.errorEvent.observe(this, Observer {
-                if (isHandleErrorInActivity)
-                    onHandleError(it)
+            viewModel!!.errorEvent.observe(this, {
+                loadingAndErrorListener?.onHandleError(it)
+
             })
         }
     }
 
-    override val isHandleErrorInActivity: Boolean = true
-
-    override val isLoadingInActivity: Boolean = true
-
-    open fun onHandleShowLoading(isShowLoading: Boolean) {
-        Log.d("loadingEvent", "loadingEvent: ${this::class.simpleName} $isShowLoading")
-    }
-
-    open fun onHandleError(throwable: Throwable) {
-        Log.d("errorEvent", "errorEvent Base Activity: ${this::class.simpleName} $throwable")
+    internal fun setOnLoadingAndErrorListener(loadingAndErrorListener: LoadingAndErrorListener) {
+        this.loadingAndErrorListener = loadingAndErrorListener
     }
 
     abstract fun setUpView()

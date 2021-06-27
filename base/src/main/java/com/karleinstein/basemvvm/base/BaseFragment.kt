@@ -10,7 +10,8 @@ import androidx.navigation.navOptions
 import com.karleinstein.basemvvm.TransferArgument
 import com.karleinstein.basemvvm.data.transfer.DataTransfer
 
-abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), BaseView {
+abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), BaseView,
+    LoadingAndErrorListener {
 
     override val viewModel: BaseViewModel? = null
 
@@ -19,27 +20,24 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), B
         if (viewModel == null) Log.d("BaseFragment:", "${this::class.simpleName} viewModel is null")
         else {
             viewModel!!.loadingEvent.observe(viewLifecycleOwner, {
-                if (!isLoadingInActivity)
-                    onHandleShowLoading(it)
+                onHandleShowLoading(it)
+
             })
             viewModel!!.errorEvent.observe(viewLifecycleOwner, {
-                if (!isHandleErrorInActivity)
-                    onHandleError(it)
+                onHandleError(it)
+
             })
         }
+        (activity as? BaseActivity)?.setOnLoadingAndErrorListener(this)
         setUpView()
         bindView()
     }
 
-    override val isHandleErrorInActivity: Boolean = true
-
-    override val isLoadingInActivity: Boolean = true
-
-    open fun onHandleShowLoading(isShowLoading: Boolean) {
+    override fun onHandleShowLoading(isShowLoading: Boolean) {
         Log.d("loadingEvent", "loadingEvent: ${this::class.simpleName} $isShowLoading")
     }
 
-    open fun onHandleError(throwable: Throwable) {
+    override fun onHandleError(throwable: Throwable) {
         Log.d("errorEvent", "errorEvent: ${this::class.simpleName} $throwable")
     }
 
