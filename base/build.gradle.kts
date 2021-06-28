@@ -49,7 +49,7 @@ android {
 //    }
 //}
 
-apply(from = rootProject.file("gradle/publish.gradle"))
+//apply(from = rootProject.file("gradle/publish.gradle"))
 
 tasks {
 //    val dokkaJavadoc by creating(org.jetbrains.dokka.gradle.DokkaTask::class) {

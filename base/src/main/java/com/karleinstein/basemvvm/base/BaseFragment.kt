@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.navOptions
+import com.karleinstein.basemvvm.R
 import com.karleinstein.basemvvm.TransferArgument
 import com.karleinstein.basemvvm.data.transfer.DataTransfer
 
@@ -62,6 +63,15 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), B
             }
     }
 
+    fun navOptionsBottomTop() = navOptions {
+        anim {
+            enter = R.anim.anim_enter_from_bottom
+            exit = 0
+            popEnter = 0
+            popExit = 0
+        }
+    }
+
     fun navOptions(animEnter: Int, animExit: Int, animPopEnter: Int, animPopExit: Int) =
         navOptions {
             anim {
@@ -79,7 +89,7 @@ abstract class BaseFragment(contentLayoutId: Int) : Fragment(contentLayoutId), B
             }
         }
 
-    fun callBackOnBackPressed() {
+    open fun callBackOnBackPressed() {
 
     }
 
